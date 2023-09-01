@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.danielti.shutupf2.mixins",
+  "client": [
+    "ScreenshotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mipollution.mixin-refmap.json"
+
+}
