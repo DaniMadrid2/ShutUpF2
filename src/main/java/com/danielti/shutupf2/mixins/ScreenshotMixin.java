@@ -2,6 +2,7 @@ package com.danielti.shutupf2.mixins;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Screenshot;
@@ -10,23 +11,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
 
+
 @Mixin(Screenshot.class)
 public class ScreenshotMixin {
-    @Shadow @Final private static DateFormat DATE_FORMAT;
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-    @Shadow @Final private static Logger LOGGER;
 
+    /**
+     * @author danielti
+     * @reason remove the saved screenshot message
+     */
+    @Overwrite
     private static void _grab(File p_92306_, @Nullable String p_92307_, RenderTarget p_92310_, Consumer<Component> p_92311_) {
         NativeImage nativeimage = Screenshot.takeScreenshot(p_92310_);
         File file1 = new File(p_92306_, "screenshots");
@@ -62,8 +67,8 @@ public class ScreenshotMixin {
                 if (event.getResultMessage() != null&&!event.getResultMessage().equals(Component.EMPTY))
                     p_92311_.accept(event.getResultMessage());
             } catch (Exception exception) {
-                LOGGER.warn("Couldn't save screenshot", (Throwable)exception);
-                p_92311_.accept(new TranslatableComponent("screenshot.failure", exception.getMessage()));
+                LogUtils.getLogger().warn("Couldn't save screenshot", (Throwable)exception);
+                //p_92311_.accept(new TranslatableComponent("screenshot.failure", exception.getMessage()));
             } finally {
                 nativeimage.close();
             }

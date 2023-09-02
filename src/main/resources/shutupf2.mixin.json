@@ -7,6 +7,6 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "mipollution.mixin-refmap.json"
+  "refmap": "shutupf2.mixin-refmap.json"
 
 }
